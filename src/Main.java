@@ -3,6 +3,11 @@ import java.util.regex.*;
 
 class CashRegister {
 
+
+    //add File creation
+    //create buffered reader with writer
+    //add error handling in all user inputs with try catch
+
     public static boolean regexValidationUsername (String username){
         Pattern regexPattern1 = Pattern.compile("^[a-zA-Z0-9]{5,15}$");
         Matcher matcher1 = regexPattern1.matcher(username);
