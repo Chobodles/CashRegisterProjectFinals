@@ -343,6 +343,7 @@ class CashRegister {
             } else if(orderRepeat.equals("N")){
                 System.out.println("System Ended.");
                 System.out.println("\n");
+                System.exit(0);
                 break;
 
             } else {
