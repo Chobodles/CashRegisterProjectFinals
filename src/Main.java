@@ -156,41 +156,19 @@ class CashRegister {
     public static void mainMenu(){
         Scanner sc  = new Scanner(System.in);
 
-        String[] menuItems = {
-                "Paa Large (PM1) - Solo",  "Paa Large (PM1) - Unlimited Rice",  "Pecho Large (PM2) - Solo",
-                "Pecho Large (PM2) - Unlimited Rice",  "1 Stick Pork BBQ - Solo",  "1 Stick Pork BBQ - With Drink",
-                "2 Sticks Pork BBQ - Solo",  "2 Sticks Pork BBQ - With Drink",  "Pork Sisig - Solo",
-                "Bangus Sisig - Solo",  "Grilled Liempo - Solo",  "Palabok - Solo",
-                "Palabok - With Drink",  "Empanada - Solo",  "Empanada - With Drink",
-                "Extra Creamy Halo-Halo",  "Crema de Leche Halo-Halo",  "Iced Red Gulaman",
-                "Iced Tea",  "Coke",  "Sprite",
-                "Plain Rice",  "Java Rice",  "Soup",
-                "Chicken Oil",  "Toyomansi",  "Peanut Sauce",
-                "Spiced Vinegar",  "Mushroom Gravy"
-        };
+        String[] menuItems = getMenuItems();
+        double[] menuPrices = getMenuPrices();
 
-        double[] menuPrices = {
-                129, 164, 142,
-                170, 53,  71,
-                89, 104, 111,
-                134, 174, 84,
-                106, 62,  84,
-                77, 77,  44,
-                44, 44, 44,
-                28, 39, 11,
-                7,  7,  8,
-                8,  11
-        };
 
-        System.out.println("Mang Inasal Menu:");
-        for (int i = 0; i <= menuItems.length-1; i++) {
-            System.out.printf("%-38s %7.2f%n", menuItems[i], menuPrices[i]); //Display menu items
-        }
+        displayMenuItems();
+
+
+
         ArrayList <String> order = new ArrayList<String>();
         ArrayList <Double> price = new ArrayList<Double>();
         ArrayList <Integer> quantity = new ArrayList<Integer>();
 
-        String choice = null;
+        String choice;
         boolean properOrder = true;
         int input2 = 0;
         do {                                                        //receive orders part and prints out the current orders
