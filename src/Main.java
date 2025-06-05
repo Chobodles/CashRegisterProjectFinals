@@ -58,12 +58,12 @@ class CashRegister {
                 }
             }
 
-            else if (userInputAccount.equals("2")){
+            else if (userInputAccount.equals("2")) {
                 if (createdUsernames.isEmpty())
                     System.out.println("No accounts found. Please Create an account to continue.");
 
                 else {
-                    while(true){
+                    while (true) {
                         String signInUsername = null;
                         String signInPassword = null;
                         boolean usernameValid = false;
@@ -75,25 +75,23 @@ class CashRegister {
                         System.out.print("Enter Password: ");
                         signInPassword = sc.nextLine();
 
-                        for (int i = 0; i<createdUsernames.size();i++){
+                        for (int i = 0; i < createdUsernames.size(); i++) {
                             if (createdUsernames.get(i).equals(signInUsername) && createdPasswords.get(i).equals(signInPassword)) {
                                 usernameValid = true;
                                 passwordValid = true;
                                 break;
-                            }
-                            else if (createdUsernames.get(i).equals(signInUsername))
+                            } else if (createdUsernames.get(i).equals(signInUsername))
                                 usernameValid = true;
                             else if (createdPasswords.get(i).equals(signInPassword))
                                 passwordValid = true;
                         }
 
-                        if(usernameValid&&passwordValid) {
+                        if (usernameValid && passwordValid) {
                             System.out.println("proceeding to main menu");
                             isSigningIn = false;
                             mainMenu();
                             break;
-                        }
-                        else if (usernameValid)
+                        } else if (usernameValid)
                             System.out.println("Account Username or Password is incorrect");
                         else if (passwordValid)
                             System.out.println("Account Username or Password is incorrect");
@@ -101,7 +99,12 @@ class CashRegister {
                             System.out.println("Account with username and password cannot be found!");
                     }
                 }
+
+
+            } else if (userInputAccount.equals("3")) {                 // remember to remove this
+                mainMenu();
             }
+
             else
                 System.out.println("invalid Input please try again");
         }
@@ -178,13 +181,44 @@ class CashRegister {
                 if (menuItems[i].equals(input)) {
                     System.out.printf("%-38s %7.2f\n", menuItems[i], menuPrices[i]); //Display ordered item with price
                     System.out.println();
-                    order.add(menuItems[i]);
-                    price.add(menuPrices[i]);
 
-                    System.out.print("Enter Quantity: ");
-                    input2 = sc.nextInt();
-                    quantity.add(input2);
-                    sc.nextLine();
+                    if(order.isEmpty()){
+                                order.add(menuItems[i]);
+                                price.add(menuPrices[i]);
+
+                                System.out.print("Enter Quantity: ");
+                                input2 = sc.nextInt();
+                                quantity.add(input2);
+                                sc.nextLine();
+
+                    } else {
+                        for (int j = 0; j < order.size(); j++) {
+                            if (order.get(j).equals(input)) {
+                                System.out.print("Enter Quantity: ");
+                                input2 = sc.nextInt();
+                                quantity.set(j, quantity.get(j) + input2);
+                                sc.nextLine();
+
+                            } else {
+                                order.add(menuItems[i]);
+                                price.add(menuPrices[i]);
+
+                                System.out.print("Enter Quantity: ");
+                                input2 = sc.nextInt();
+                                quantity.add(input2);
+                                sc.nextLine();
+                            }
+                        }
+                    }
+
+
+//                    order.add(menuItems[i]);
+//                    price.add(menuPrices[i]);
+//
+//                    System.out.print("Enter Quantity: ");
+//                    input2 = sc.nextInt();
+//                    quantity.add(input2);
+//                    sc.nextLine();
                     properOrder = true;
                     break;
                 } else if (i == menuItems.length-1 && !properOrder){
