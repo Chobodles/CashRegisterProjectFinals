@@ -112,6 +112,46 @@ class CashRegister {
         System.out.println("Welcome to Mang Inasal");
         login();
     }
+    public static String[] getMenuItems(){
+        return new String[]{
+                "Paa Large (PM1) - Solo",  "Paa Large (PM1) - Unlimited Rice",  "Pecho Large (PM2) - Solo",
+                "Pecho Large (PM2) - Unlimited Rice",  "1 Stick Pork BBQ - Solo",  "1 Stick Pork BBQ - With Drink",
+                "2 Sticks Pork BBQ - Solo",  "2 Sticks Pork BBQ - With Drink",  "Pork Sisig - Solo",
+                "Bangus Sisig - Solo",  "Grilled Liempo - Solo",  "Palabok - Solo",
+                "Palabok - With Drink",  "Empanada - Solo",  "Empanada - With Drink",
+                "Extra Creamy Halo-Halo",  "Crema de Leche Halo-Halo",  "Iced Red Gulaman",
+                "Iced Tea",  "Coke",  "Sprite",
+                "Plain Rice",  "Java Rice",  "Soup",
+                "Chicken Oil",  "Toyomansi",  "Peanut Sauce",
+                "Spiced Vinegar",  "Mushroom Gravy"
+        };
+
+    }
+    public static double[] getMenuPrices(){
+        return new double[]{
+                129, 164, 142,
+                170, 53,  71,
+                89, 104, 111,
+                134, 174, 84,
+                106, 62,  84,
+                77, 77,  44,
+                44, 44, 44,
+                28, 39, 11,
+                7,  7,  8,
+                8,  11
+        };
+
+    }
+
+    public static void displayMenuItems(){  //Display menu items
+        String[] menuItems = getMenuItems();
+        double[] menuPrices = getMenuPrices();
+
+        System.out.println("Mang Inasal Menu:");
+        for (int i = 0; i < menuItems.length; i++)
+            System.out.printf("%-38s %7.2f%n", menuItems[i], menuPrices[i]);
+
+    }
 
     public static void mainMenu(){
         Scanner sc  = new Scanner(System.in);
