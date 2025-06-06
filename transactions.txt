@@ -1,0 +1,29 @@
+********************************************************************************
+Date and Time: June 06, 2025 - 17:44:58
+Username: PaulHarris
+Order:                                   Amount:        Quantity:      Total:
+Coke                                     44             2              88.00         
+Discounted: Yes
+Total: 70.40
+Payment Amount: 80.00
+Change: 9.60
+********************************************************************************
+Date and Time: June 06, 2025 - 17:44:58
+Username: PaulHarris
+Order:                                   Amount:        Quantity:      Total:
+Coke                                     44             3              132.00        
+Mushroom Gravy                           11             5              55.00         
+Pork Sisig - Solo                        111            4              444.00        
+Discounted: Yes
+Total: 504.80
+Payment Amount: 600.00
+Change: 95.20
+********************************************************************************
+Date and Time: June 06, 2025 - 17:49:32
+Username: Paul12345
+Order:                                   Amount:        Quantity:      Total:
+Empanada - Solo                          62             50             3100.00       
+Discounted: No
+Total: 3100.00
+Payment Amount: 4000.00
+Change: 900.00

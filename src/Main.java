@@ -1,12 +1,23 @@
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.*;
 
 class CashRegister {
+    static Scanner sc  = new Scanner(System.in);
+    static LocalDateTime dateTime = LocalDateTime.now();
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy - HH:mm:ss");
+    static String formattedDateTime = dateTime.format(formatter);
+    static String currentUser;
+    static String isDiscounted;
+    static double totalAmount;
+    static double finalPaymentAmount;
+    static double finalChange;
 
-
-    //add File creation
-    //create buffered reader with writer
-    //add error handling in all user inputs with try catch
+    static ArrayList <String> order = new ArrayList<>();
+    static ArrayList <Double> price = new ArrayList<>();
+    static ArrayList <Integer> quantity = new ArrayList<>();
 
     public static boolean regexValidationUsername (String username){
         Pattern regexPattern1 = Pattern.compile("^[a-zA-Z0-9]{5,15}$");
@@ -22,8 +33,8 @@ class CashRegister {
 
     public static void login(){
         Scanner sc = new Scanner(System.in);
-        ArrayList <String> createdUsernames = new ArrayList<String>();
-        ArrayList <String> createdPasswords = new ArrayList<String>();
+        ArrayList <String> createdUsernames = new ArrayList<>();
+        ArrayList <String> createdPasswords = new ArrayList<>();
 
         boolean isSigningIn = true;
         while (isSigningIn){
@@ -32,8 +43,8 @@ class CashRegister {
             String userInputAccount = sc.nextLine();
             if (userInputAccount.equals("1")){
                 while(true){
-                    String inputUsername = null;
-                    String inputPassword = null;
+                    String inputUsername;
+                    String inputPassword;
 
                     System.out.print("Enter a Username: ");
                     inputUsername = sc.nextLine();
@@ -64,11 +75,10 @@ class CashRegister {
 
                 else {
                     while (true) {
-                        String signInUsername = null;
-                        String signInPassword = null;
+                        String signInUsername;
+                        String signInPassword;
                         boolean usernameValid = false;
                         boolean passwordValid = false;
-
 
                         System.out.print("Enter Username: ");
                         signInUsername = sc.nextLine();
@@ -89,6 +99,7 @@ class CashRegister {
                         if (usernameValid && passwordValid) {
                             System.out.println("proceeding to main menu");
                             isSigningIn = false;
+                            currentUser = signInUsername;
                             mainMenu();
                             break;
                         } else if (usernameValid)
@@ -108,8 +119,8 @@ class CashRegister {
             else
                 System.out.println("invalid Input please try again");
         }
-
     }
+
 
     public static void main(String[] args) {
         System.out.println("Welcome to Mang Inasal");
@@ -153,183 +164,192 @@ class CashRegister {
         System.out.println("Mang Inasal Menu:");
         for (int i = 0; i < menuItems.length; i++)
             System.out.printf("%-38s %7.2f%n", menuItems[i], menuPrices[i]);
-
     }
 
-    public static void mainMenu(){
-        Scanner sc  = new Scanner(System.in);
-
-        String[] menuItems = getMenuItems();
-        double[] menuPrices = getMenuPrices();
-
-
-        displayMenuItems();
-
-
-
-        ArrayList <String> order = new ArrayList<String>();
-        ArrayList <Double> price = new ArrayList<Double>();
-        ArrayList <Integer> quantity = new ArrayList<Integer>();
-
-        String choice;
-        boolean properOrder = true;
-        int input2 = 0;
-        do {                                                        //receive orders part and prints out the current orders
-            System.out.print("Enter Your Order: ");
-            String input = sc.nextLine();
-            for (int i = 0; i < menuItems.length; i++) {
-                if (menuItems[i].equals(input)) {
-                    System.out.printf("%-38s %7.2f\n", menuItems[i], menuPrices[i]); //Display ordered item with price
-                    System.out.println();
-
-                    if(order.isEmpty()){
-                                order.add(menuItems[i]);
-                                price.add(menuPrices[i]);
-
-                                System.out.print("Enter Quantity: ");
-                                input2 = sc.nextInt();
-                                quantity.add(input2);
-                                sc.nextLine();
-
-                    } else {
-                        for (int j = 0; j < order.size(); j++) {
-                            if (order.get(j).equals(input)) {
-                                System.out.print("Enter Quantity: ");
-                                input2 = sc.nextInt();
-                                quantity.set(j, quantity.get(j) + input2);
-                                sc.nextLine();
-
-                            } else {
-                                order.add(menuItems[i]);
-                                price.add(menuPrices[i]);
-
-                                System.out.print("Enter Quantity: ");
-                                input2 = sc.nextInt();
-                                quantity.add(input2);
-                                sc.nextLine();
-                            }
-                        }
-                    }
-
-
-//                    order.add(menuItems[i]);
-//                    price.add(menuPrices[i]);
-//
-//                    System.out.print("Enter Quantity: ");
-//                    input2 = sc.nextInt();
-//                    quantity.add(input2);
-//                    sc.nextLine();
-                    properOrder = true;
-                    break;
-                } else if (i == menuItems.length-1 && !properOrder){
-
-                    System.out.println("Please provide proper input");
-                    System.out.println();
-                } else{
-                    properOrder = false;
-                }
-            }
-
-            System.out.println();
-            System.out.println("**************************Current Orders**************************");
-            System.out.println("Order:                                   Amount:        Quantity:");
-
-            for (int i = 0; i < price.size();i++){
-                System.out.printf("%-40s %-14.0f %-14d\n",order.get(i) , price.get(i), quantity.get(i));
-            }
-
-            do{
-                System.out.println();
-                System.out.print("Do you have any additional orders?(Y/N): ");
-                choice = sc.nextLine().toUpperCase();
-                System.out.println();
-
-                if (choice.equals("Y")||choice.equals("N")) {
-                    break;
-
-                } else{
-                    System.out.println("Please provide proper input");
-                }
-
-            } while(true);
-
-        } while(choice.equals("Y"));
-
-        String choiceChange = null;
-        String inputChange = null;
-        String orderChange = null;
-
-        do {                                           //Edit order replace or remove
-            System.out.println("*********************************Current Orders********************************* ");
-            System.out.println("Order:                                   Amount:        Quantity:      Total:");
-
-            for (int i = 0; i < price.size();i++){
-                System.out.printf("%-40s %-14.0f %-14d %-14.2f\n",order.get(i) , price.get(i), quantity.get(i),(price.get(i)*quantity.get(i)));
-            }
-            System.out.println();
-            System.out.print("Do you have any changes?(Y/N): ");
-
-            choiceChange = sc.nextLine().toUpperCase();
-            if (choiceChange.equals("Y")){
-                System.out.print("Do you want to remove or replace?: ");
-                inputChange = sc.nextLine().toUpperCase();
-                if (inputChange.equals("REMOVE")){
-                    System.out.print("Enter order to remove: ");
-                    orderChange = sc.nextLine();
-                    int removeOrder = order.indexOf(orderChange);
-                    order.remove(removeOrder);
-                    price.remove(removeOrder);
-                    quantity.remove(removeOrder);
-
-                } else if (inputChange.equals("REPLACE")){
-                    System.out.print("Enter order to change: ");
-                    orderChange = sc.nextLine();
-                    int replaceOrder = order.indexOf(orderChange);
-                    System.out.print("Enter new order: ");
-                    String input = sc.nextLine();
-                    for (int i = 0; i < menuItems.length; i++) {
-                        if (menuItems[i].equals(input)) {
-                            System.out.printf("%-39s %10.2f\n", menuItems[i], menuPrices[i]); //Display ordered item with price
-                            order.set(replaceOrder, menuItems[i]);
-                            price.set(replaceOrder, menuPrices[i]);
-                            System.out.print("Enter Quantity: ");
-                            input2 = sc.nextInt();
-                            quantity.set(replaceOrder,input2);
-                            sc.nextLine();
-                            properOrder = true;
-                            break;
-                        } else if (i == menuItems.length-1 && !properOrder){
-
-                            System.out.println("Please provide proper input");
-                            System.out.println();
-                        } else{
-                            properOrder = false;
-                        }
-                    }
-
-                } else{
-                    System.out.println("Please provide proper input");
-                    System.out.println();
-                }
-
-            } else if (choiceChange.equals("N")){
-                break;
-
-            } else{
-                System.out.println("Please provide proper input");
-                System.out.println();
-            }
-
-        } while(true);
-
-        System.out.println();                                               //print all orders and total
-        System.out.println("Proceeding to payment...\n");
+    public static void displayCurrentOrders(){
         System.out.println("*********************************Current Orders********************************* ");
         System.out.println("Order:                                   Amount:        Quantity:      Total:");
 
         for (int i = 0; i < price.size();i++){
             System.out.printf("%-40s %-14.0f %-14d %-14.2f\n",order.get(i) , price.get(i), quantity.get(i),(price.get(i)*quantity.get(i)));
         }
+        System.out.println();
+    }
+
+    public static void addOrders(){
+        sc.nextLine();
+        String[] menuItems = getMenuItems();
+        double[] menuPrices = getMenuPrices();
+        String choice;
+
+        do {
+            System.out.print("Enter Your Order: ");
+            String input = sc.nextLine();
+            boolean itemFound = false;
+
+            for (int i = 0; i < menuItems.length; i++) {
+                if (menuItems[i].equalsIgnoreCase(input)) {
+                    itemFound = true;
+                    System.out.printf("%-38s %7.2f\n", menuItems[i], menuPrices[i]);
+                    int inputQty = 0;
+                    boolean validInput = false;
+
+                    while (!validInput) {
+                        System.out.print("Enter Quantity: ");
+                        try {
+                            inputQty = sc.nextInt();
+                            sc.nextLine(); // consume newline
+                            if (inputQty <= 0) {
+                                System.out.println("Please enter a positive number.");
+                            } else {
+                                validInput = true;
+                            }
+                        } catch (InputMismatchException e) {
+                            System.out.println("Invalid input. Please enter a number.");
+                            sc.nextLine(); // consume the invalid input
+                        }
+                    }
+
+                    boolean alreadyOrdered = false;
+                    for (int j = 0; j < order.size(); j++) {
+                        if (order.get(j).equalsIgnoreCase(input)) {
+                            quantity.set(j, quantity.get(j) + inputQty);
+                            alreadyOrdered = true;
+                            break;
+                        }
+                    }
+
+                    if (!alreadyOrdered) {
+                        order.add(menuItems[i]);
+                        price.add(menuPrices[i]);
+                        quantity.add(inputQty);
+                    }
+
+                    break; // item matched
+                }
+            }
+
+            if (!itemFound) {
+                System.out.println("Please provide proper input\n");
+            }
+
+            displayCurrentOrders();
+
+            do {
+
+                System.out.print("\nDo you have any additional orders? (Y/N): ");
+                choice = sc.nextLine().toUpperCase();
+
+                if (choice.equals("Y") || choice.equals("N")) {
+                    break;
+                } else {
+                    System.out.println("Please provide proper input");
+                }
+            } while (true);
+
+        } while (choice.equals("Y"));
+    }
+
+
+    public static void removeOrders() {
+        if (order.isEmpty()){
+            System.out.println("No orders to remove");
+            mainMenu();
+        }
+        displayCurrentOrders();
+
+        sc.nextLine();
+
+        try {
+            System.out.print("Enter order to remove: ");
+            String orderChange = sc.nextLine();
+
+            int removeOrder = order.indexOf(orderChange);
+
+            order.remove(removeOrder);
+            price.remove(removeOrder);
+            quantity.remove(removeOrder);
+            System.out.println("Order has been removed.");
+            displayCurrentOrders();
+        } catch (Exception e) {
+            System.out.println("Order does not exist");
+        }
+    }
+
+
+    public static void replaceOrders() {
+        if (order.isEmpty()){
+            System.out.println("No orders to replace");
+            mainMenu();
+        }
+        displayCurrentOrders();
+
+        String[] menuItems = getMenuItems();
+        double[] menuPrices = getMenuPrices();
+        sc.nextLine();
+        boolean properOrder = false;
+
+        System.out.print("Enter order to change: ");
+        String replaceOrder = sc.nextLine();
+        int replaceOrderIndex = order.indexOf(replaceOrder);
+
+        if (replaceOrderIndex == -1) {
+            System.out.println("That order does not exist.\n");
+        } else {
+            System.out.print("Enter new order: ");
+            String input = sc.nextLine();
+
+            for (int i = 0; i < menuItems.length; i++) {
+                if (menuItems[i].equalsIgnoreCase(input)) {
+                    System.out.printf("%-39s %10.2f\n", menuItems[i], menuPrices[i]);
+
+                    order.set(replaceOrderIndex, menuItems[i]);
+                    price.set(replaceOrderIndex, menuPrices[i]);
+
+                    int quantityOfOrder = 0;
+                    boolean validQty = false;
+
+                    while (!validQty) {
+                        System.out.print("Enter Quantity: ");
+                        try {
+                            quantityOfOrder = sc.nextInt();
+                            sc.nextLine(); // consume newline
+
+                            if (quantityOfOrder <= 0) {
+                                System.out.println("Please enter a number greater than 0.");
+                            } else {
+                                validQty = true;
+                            }
+
+                        } catch (InputMismatchException e) {
+                            System.out.println("Invalid input. Please enter a valid number.");
+                            sc.nextLine(); // clear invalid input
+                        }
+                    }
+
+                    quantity.set(replaceOrderIndex, quantityOfOrder);
+                    System.out.println("Order has been replaced.");
+                    displayCurrentOrders();
+                    properOrder = true;
+                    break;
+                }
+            }
+
+            if (!properOrder) {
+                System.out.println("Please provide a valid menu item.\n");
+            }
+        }
+    }
+
+    public static void payment(){
+        if (order.isEmpty()){
+            System.out.println("No orders to be paid");
+            mainMenu();
+        }
+        sc.nextLine();
+        System.out.println();                                               //print all orders and total
+        System.out.println("Proceeding to payment...\n");
+        displayCurrentOrders();
 
         double total = 0;
         for (int i = 0; i < price.size();i++){
@@ -338,7 +358,7 @@ class CashRegister {
 
         System.out.printf("Total: %.2f\n", total);
         double discountedTotal = total;
-        String discountChoice = "";
+        String discountChoice;
 
         do{                                            //Discount
             System.out.println();
@@ -361,30 +381,42 @@ class CashRegister {
         }while(true);
 
         System.out.println();
-        int customerPayment = 0;
-        double change = 0;
+        int customerPayment;
+        double change;
         while(true){                                      //accept payment and display change
-            System.out.printf("Total Amount: %.2f\n", discountedTotal);
-            System.out.print("Enter Payment Amount: ");
-            customerPayment = sc.nextInt();
+            try {
+                System.out.printf("Total Amount: %.2f\n", discountedTotal);
+                System.out.print("Enter Payment Amount: ");
+                customerPayment = sc.nextInt();
+                sc.nextLine();
 
-            if(customerPayment>=discountedTotal){
-                change = customerPayment - discountedTotal;
-                System.out.printf("Change: %.2f\n",change);
-                break;
-            }
-            else{
-                System.out.println();
-                System.out.println("Insufficient Amount!");
-                System.out.println("Please Provide Appropriate Payment Amount");
-                System.out.println();
+                if(customerPayment>=discountedTotal){
+                    change = customerPayment - discountedTotal;
+                    System.out.printf("Change: %.2f\n",change);
+                    break;
+                }
+                else{
+                    System.out.println();
+                    System.out.println("Insufficient Amount!");
+                    System.out.println("Please Provide Appropriate Payment Amount");
+                    System.out.println();
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+                sc.nextLine();
             }
 
         }
-        sc.nextLine();
+
+        isDiscounted = discountChoice.equalsIgnoreCase("Y")? "Yes": "No";
+        totalAmount = discountedTotal;
+        finalPaymentAmount = customerPayment;
+        finalChange = change;
         System.out.println("Thank you for ordering!");
         System.out.println();
-        String orderRepeat = "Y";
+        transactionLogger();
+
+        String orderRepeat;
 
         do{                                         //repeat order
             System.out.print("Would you like to take another order?(Y/N): ");
@@ -409,5 +441,56 @@ class CashRegister {
 
         } while (true);
         sc.close();
+
+    }
+    public static void transactionLogger(){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("transactions.txt", true))) {
+
+            writer.write("********************************************************************************");
+            writer.newLine();
+            writer.write("Date and Time: " + formattedDateTime);
+            writer.newLine();
+            writer.write("Username: " + currentUser);
+            writer.newLine();
+            writer.write("Order:                                   Amount:        Quantity:      Total:");
+            writer.newLine();
+            for (int i = 0; i < price.size();i++){
+                String formattedLine = String.format("%-40s %-14.0f %-14d %-14.2f%n", order.get(i) , price.get(i), quantity.get(i),(price.get(i)*quantity.get(i)));
+                writer.write(formattedLine);
+            }
+            writer.write("Discounted: " + isDiscounted);
+            writer.newLine();
+            writer.write("Total: " + String.format("%.2f", totalAmount));
+            writer.newLine();
+            writer.write("Payment Amount: " + String.format("%.2f", finalPaymentAmount));
+            writer.newLine();
+            writer.write("Change: " + String.format("%.2f", finalChange));
+            writer.newLine();
+
+        } catch (IOException e) {
+            System.out.println("Failed to update the file.");
+
+        }
+    }
+
+    public static void mainMenu(){
+        do {
+            displayMenuItems();
+            System.out.println();
+            System.out.print("Type (\"1\" -> Add | \"2\" -> Replace | \"3\" -> Remove | \"4\" -> Payment | \"5\" -> Stop): ");
+            String type = sc.next();
+
+            switch (type){
+                case "1" -> addOrders();
+                case "2" -> replaceOrders();
+                case "3" -> removeOrders();
+                case "4" -> payment();
+                case "5" -> System.exit(0);
+
+                default -> System.out.println("Invalid Input\nPlease Try Again");
+            }
+
+        } while(true);
+
     }
 }
