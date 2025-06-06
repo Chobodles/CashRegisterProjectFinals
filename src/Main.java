@@ -110,12 +110,7 @@ class CashRegister {
                             System.out.println("Account with username and password cannot be found!");
                     }
                 }
-
-
-            } else if (userInputAccount.equals("3")) {                 // remember to remove this
-                mainMenu();
             }
-
             else
                 System.out.println("invalid Input please try again");
         }
